@@ -9,21 +9,21 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/categories/index.html</loc>
+    <loc>http://yoursite.com/categories%20/index.html</loc>
     
     <lastmod>2020-03-15T13:36:38.896Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/tags/index.html</loc>
+    <loc>http://yoursite.com/tags%20/index.html</loc>
     
     <lastmod>2020-03-15T13:35:39.711Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/about/index.html</loc>
+    <loc>http://yoursite.com/about%20/index.html</loc>
     
     <lastmod>2020-03-15T13:33:28.073Z</lastmod>
     

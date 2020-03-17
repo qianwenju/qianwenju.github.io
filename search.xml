@@ -49,6 +49,9 @@
 <p>到这里，我们的RNAseq流程中的原始数据处理(clean data)这一步就已经到这里就告一段落了。</p>
 <h1 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h1><p><a href="https://www.sohu.com/a/252244330_100269283" target="_blank" rel="noopener">https://www.sohu.com/a/252244330_100269283</a><br><a href="https://zhuanlan.zhihu.com/p/61847802" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/61847802</a></p>
 ]]></content>
+      <categories>
+        <category>RNA-seq</category>
+      </categories>
       <tags>
         <tag>bioinformatics</tag>
         <tag>fastq</tag>

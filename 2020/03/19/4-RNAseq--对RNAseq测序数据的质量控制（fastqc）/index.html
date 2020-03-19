@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="bioinformatics,fastq,fastqc,Trimmomatic," />
+  <meta name="keywords" content="htseq-count,bioMart," />
 
 
 
@@ -79,30 +79,34 @@
 
 
 
-<meta name="description" content="fastq文件一般我们从公司里得到的原始测序数据都是属于fastq.gz文件, .gz是一种压缩格式的缩写，于是首先第一步是对这些压缩格式进行解压操作 1gzip -d 19R576_combined_R1.fastq.gz 19R576_combined_R2.fastq.gz 19R577_combined_R1.fastq.gz 19R577_combined_R2.fastq.gz 解压好">
+<meta name="description" content="理论基础在上篇的比对中，我们需要纠结是否真的需要比对，如果你只需要知道已知基因的表达情况，那么可以选择alignment-free工具（例如salmon, sailfish)，如果你需要找到noval isoforms，那么就需要alignment-based工具（如HISAT2, STAR）。到了这一篇的基因（转录本）定量，需要考虑的因素就更加多了，以至于我不知道如何说清才能理清逻辑。 定量分为">
 <meta property="og:type" content="article">
-<meta property="og:title" content="1-RNAseq--测序原始数据处理（Clean  data）">
-<meta property="og:url" content="http://yoursite.com/2020/03/16/1-RNAseq--%E6%B5%8B%E5%BA%8F%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%EF%BC%88Clean%20%20data%EF%BC%89/index.html">
+<meta property="og:title" content="4-RNAseq--reads count(htseq-count)与基因注释（bioMart）">
+<meta property="og:url" content="http://yoursite.com/2020/03/19/4-RNAseq--%E5%AF%B9RNAseq%E6%B5%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E7%9A%84%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%EF%BC%88fastqc%EF%BC%89/index.html">
 <meta property="og:site_name" content="小钱的个人博客">
-<meta property="og:description" content="fastq文件一般我们从公司里得到的原始测序数据都是属于fastq.gz文件, .gz是一种压缩格式的缩写，于是首先第一步是对这些压缩格式进行解压操作 1gzip -d 19R576_combined_R1.fastq.gz 19R576_combined_R2.fastq.gz 19R577_combined_R1.fastq.gz 19R577_combined_R2.fastq.gz 解压好">
+<meta property="og:description" content="理论基础在上篇的比对中，我们需要纠结是否真的需要比对，如果你只需要知道已知基因的表达情况，那么可以选择alignment-free工具（例如salmon, sailfish)，如果你需要找到noval isoforms，那么就需要alignment-based工具（如HISAT2, STAR）。到了这一篇的基因（转录本）定量，需要考虑的因素就更加多了，以至于我不知道如何说清才能理清逻辑。 定量分为">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-6c7f1ae724836c1c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-0960d9117ba7b837.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-34575c8f297fc99e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-3a962a7125288d55.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-88c5b49855d0817a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-b32de3de66fa88f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-df2d26db48586472.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-7162d46bf4432054.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="article:published_time" content="2020-03-16T12:12:04.000Z">
-<meta property="article:modified_time" content="2020-03-17T07:10:45.663Z">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2013053-b58df35852061ed0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/678/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-470a0a097f2c6e28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-01520ab9d5e7a426.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-b70af825113864eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-5948b355119d8bec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-1fa21910e16f20e7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-04cb464c28b58a9b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-3eae806f3b0f9875.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-52b3b3550c8494b4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-51cc729134d0ca5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-6a199fb658862085.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-abbae3370602ce6d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-216b5ca4d3e7504a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-f1953191a5dde621.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2020-03-19T14:12:44.000Z">
+<meta property="article:modified_time" content="2020-03-19T14:21:21.686Z">
 <meta property="article:author" content="WENJU QIAN">
-<meta property="article:tag" content="bioinformatics">
-<meta property="article:tag" content="fastq">
-<meta property="article:tag" content="fastqc">
-<meta property="article:tag" content="Trimmomatic">
+<meta property="article:tag" content="htseq-count">
+<meta property="article:tag" content="bioMart">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3194654-6c7f1ae724836c1c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2013053-b58df35852061ed0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/678/format/webp">
 
 
 
@@ -132,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/03/16/1-RNAseq--测序原始数据处理（Clean  data）/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/19/4-RNAseq--对RNAseq测序数据的质量控制（fastqc）/"/>
 
 
 
 
 
-  <title>1-RNAseq--测序原始数据处理（Clean  data） | 小钱的个人博客</title>
+  <title>4-RNAseq--reads count(htseq-count)与基因注释（bioMart） | 小钱的个人博客</title>
   
 
 
@@ -325,7 +329,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/16/1-RNAseq--%E6%B5%8B%E5%BA%8F%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%EF%BC%88Clean%20%20data%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/19/4-RNAseq--%E5%AF%B9RNAseq%E6%B5%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E7%9A%84%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%EF%BC%88fastqc%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="WENJU QIAN">
@@ -342,7 +346,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">1-RNAseq--测序原始数据处理（Clean  data）</h1>
+          <h1 class="post-title" itemprop="name headline">4-RNAseq--reads count(htseq-count)与基因注释（bioMart）</h1>
         
 
         <div class="post-meta">
@@ -354,8 +358,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-16T20:12:04+08:00">
-                2020-03-16
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-19T22:12:44+08:00">
+                2020-03-19
               </time>
             
 
@@ -377,8 +381,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/RNA-seq/" itemprop="url" rel="index">
-                    <span itemprop="name">RNA-seq</span>
+                  <a href="/categories/bioinformatics/" itemprop="url" rel="index">
+                    <span itemprop="name">bioinformatics</span>
                   </a>
                 </span>
 
@@ -395,8 +399,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/03/16/1-RNAseq--%E6%B5%8B%E5%BA%8F%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%EF%BC%88Clean%20%20data%EF%BC%89/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/16/1-RNAseq--%E6%B5%8B%E5%BA%8F%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%EF%BC%88Clean%20%20data%EF%BC%89/" itemprop="commentCount"></span>
+                <a href="/2020/03/19/4-RNAseq--%E5%AF%B9RNAseq%E6%B5%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E7%9A%84%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%EF%BC%88fastqc%EF%BC%89/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/19/4-RNAseq--%E5%AF%B9RNAseq%E6%B5%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E7%9A%84%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%EF%BC%88fastqc%EF%BC%89/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -423,7 +427,7 @@
                   <span class="post-meta-item-text">Words count in article&#58;</span>
                 
                 <span title="Words count in article">
-                  1.7k
+                  2.5k
                 </span>
               
 
@@ -439,7 +443,7 @@
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
                 <span title="Reading time">
-                  6
+                  9
                 </span>
               
             </div>
@@ -460,47 +464,96 @@
       
 
       
-        <h1 id="fastq文件"><a href="#fastq文件" class="headerlink" title="fastq文件"></a>fastq文件</h1><p>一般我们从公司里得到的原始测序数据都是属于fastq.gz文件, .gz是一种压缩格式的缩写，于是首先第一步是对这些压缩格式进行解压操作<br><img src="https://upload-images.jianshu.io/upload_images/3194654-6c7f1ae724836c1c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">gzip</span> <span class="selector-tag">-d</span> 19<span class="selector-tag">R576_combined_R1</span><span class="selector-class">.fastq</span><span class="selector-class">.gz</span> 19<span class="selector-tag">R576_combined_R2</span><span class="selector-class">.fastq</span><span class="selector-class">.gz</span> 19<span class="selector-tag">R577_combined_R1</span><span class="selector-class">.fastq</span><span class="selector-class">.gz</span> 19<span class="selector-tag">R577_combined_R2</span><span class="selector-class">.fastq</span><span class="selector-class">.gz</span></span><br></pre></td></tr></table></figure>
-<p>解压好的文件即正常的Fastq文件，当然这里只是演示一下Fastq.gz是怎样解压的，给大家看一下即可，建议还是暂时不用解压，以为后面将介绍的测序质控还是用的压缩格式的gz文件作为输入文件<br><img src="https://upload-images.jianshu.io/upload_images/3194654-0960d9117ba7b837.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>首先先简单介绍一下什么是fataq文件</p>
-<p>在illumina的测序文件中，采用双端测序（paired-end），一个样本得到的是seq_1.fastq.gz和seq_2.fastq.gz两个文件，每个文件存放一段测序文件。在illumina的测序的cDNA短链被修饰为以下形式（图源见水印）：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/3194654-34575c8f297fc99e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
-<p>两端的序列是保护碱基（terminal sequence）、接头序列（adapter）、索引序列（index）、引物结合位点（Primer Binding Site）：其中 adapter是和flowcell上的接头互补配对结合的；index是一段特异序列，加入index是为了提高illumina测序仪的使用率，因为同一个泳道可能会测序多个样品，样品间的区分就是通过index区分。参考：<a href="https://link.zhihu.com/?target=https%3A//blog.csdn.net/hanli1992/article/details/82980042">illumina 双端测序（pair end）</a>、<a href="https://link.zhihu.com/?target=https%3A//www.jianshu.com/p/b18ee79a0285">双端测序中read1和read2的关系</a>。</p>
-<p>在illumina公司测得的序列文件经过处理以fastq文件协议存储为*.fastq格式文件。在fastq文件中每4行存储一个read。</p>
-<p><strong>第一行</strong>：以@开头接ReadID和其他信息，分别介绍了 <strong>第二行</strong>：read测序信息 <strong>第三行</strong>：规定必须以“+”开头，后面跟着可选的ID标识符和可选的描述内容，如果“+”后面有内容，该内容必须与第一行“@”后的内容相同 <strong>第四行</strong>：每个碱基的质量得分。记分方法是利用ERROR P经过对数和运算分为40个级别分别与ASCII码的第33号<code>!</code>和第73号<code>I</code>对应。用ASCII码表示碱基质量是为了减少文件空间占据和防止移码导致的数据损失。fastq文件预览如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/3194654-3a962a7125288d55.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h1 id="对数据进行质控（去接头和低质量的reads以及Fastqc）"><a href="#对数据进行质控（去接头和低质量的reads以及Fastqc）" class="headerlink" title="对数据进行质控（去接头和低质量的reads以及Fastqc）"></a>对数据进行质控（去接头和低质量的reads以及Fastqc）</h1><p>为什么要对数据进行clean data这一步呢，主要是在测序过程中加入了接头序列（便于测序），以及测序过程中产生的一些低质量的reads, 如果不事先对这些进行筛选的很有可能会影响之后进行序列比对。</p>
-<p>这里给大家介绍的就是数据质控界常用的——Trimmomatic软件。</p>
-<h2 id="Trimmomatic-简介"><a href="#Trimmomatic-简介" class="headerlink" title="Trimmomatic 简介"></a>Trimmomatic 简介</h2><p>Trimmomatic软件，2014年首次发表在Bioinformatics期刊上，是一款专门对Illumina平台测序产生的reads进行修剪和过滤的软件。自发表以来，Trimmomatic软件凭借其简单的安装方法、较快的运行速度（支持多线程）、强大的去接头能力（simple和palindrome两种模式）、多元化的低质量数据处理方式、人性化的输出格式（clean reads为一一对应的pair-end形式，无需再次处理）等特点，深受数据处理者喜爱！下面就由小奥带大家一起来学习下Trimmomatic的具体用法。</p>
-<h3 id="Trimmomatic-下载"><a href="#Trimmomatic-下载" class="headerlink" title="Trimmomatic 下载"></a>Trimmomatic 下载</h3><h4 id="一-在Linux系统下通过命令行进行下载安装"><a href="#一-在Linux系统下通过命令行进行下载安装" class="headerlink" title="(一)在Linux系统下通过命令行进行下载安装"></a>(一)在Linux系统下通过命令行进行下载安装</h4><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 创建一个名为Trimmomatic的文件夹</span></span><br><span class="line"></span><br><span class="line">mkdir Trimmomatic</span><br><span class="line"></span><br><span class="line"><span class="meta"># 进入Trimmomatic文件夹工作路径下</span></span><br><span class="line"></span><br><span class="line">cd Trimmomatic</span><br><span class="line"></span><br><span class="line"><span class="meta"># 通过wget命令下载Trimmomatic-0.38.zip压缩文件</span></span><br><span class="line"></span><br><span class="line">wget http:<span class="comment">//www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.38.zip</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#uzip解压缩Trimmomatic-0.36.zip文件</span></span><br><span class="line"></span><br><span class="line">unzip Trimmomatic<span class="number">-0.38</span>.</span><br><span class="line"></span><br><span class="line"><span class="meta">#运行安装命令，即可完成安装</span></span><br><span class="line"></span><br><span class="line">java -jar~/biosoft/Trimmomatic/Trimmomatic<span class="number">-0.36</span>/trimmomatic<span class="number">-0.36</span>.jar –h</span><br></pre></td></tr></table></figure>
-<h5 id="二-通过conda直接一键安装"><a href="#二-通过conda直接一键安装" class="headerlink" title="(二)通过conda直接一键安装"></a>(二)通过conda直接一键安装</h5><p>先search一下到底conda可不可以搜索到软件安装的channel</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">conda search trimmomatic</span></span><br></pre></td></tr></table></figure>
-
-<p>反馈显示可以从相应的channel中找到trimmomatic软件<br>于是直接用conda一键安装</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda <span class="keyword">install</span> trimmomatic</span><br></pre></td></tr></table></figure>
-<p><img src="https://upload-images.jianshu.io/upload_images/3194654-88c5b49855d0817a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>安装完成</p>
-<h3 id="Trimmomatic-质控用法"><a href="#Trimmomatic-质控用法" class="headerlink" title="Trimmomatic 质控用法"></a>Trimmomatic 质控用法</h3><p>根据单端测序和双端测序两种模式，Trimmomatic软件也有两种质控用法</p>
-<h5 id="◆-1-SE-模式"><a href="#◆-1-SE-模式" class="headerlink" title="◆ 1. SE 模式"></a>◆ 1. SE 模式</h5><p>SE模式下，只有一个输入文件和一个质控后的输出文件，运行命令如下</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Java –jar <span class="tag">&lt; <span class="attr">trimmomatic</span>的安装路径&gt;</span> SE –threads <span class="tag">&lt;<span class="name">线程数</span>&gt;</span> <span class="tag">&lt;<span class="name">input</span>&gt;</span> <span class="tag">&lt;<span class="name">output</span>&gt;</span> <span class="tag">&lt;<span class="name">step1</span>&gt;</span> <span class="tag">&lt;<span class="name">step2</span>&gt;</span> …<span class="tag">&lt;<span class="name">step1</span>&gt;</span><span class="tag">&lt;<span class="name">step2</span>&gt;</span>… 表示每一步的质控参数</span><br></pre></td></tr></table></figure>
-<h5 id="◆-2-PE模式"><a href="#◆-2-PE模式" class="headerlink" title="◆ 2. PE模式"></a>◆ 2. PE模式</h5><p>PE 模式下，有两个输入文件（正向测序reads和反向测序reads）和四个质控后的输出文件（双端序列都保留的paired序列文件和只保留一端序列的unpaired序列文件），运行命令如下：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar <span class="variable">$trimmomatic</span> PE -threads <span class="number">12</span> -phred33 <span class="variable">$R1</span><span class="selector-class">.fq</span><span class="selector-class">.gz</span> <span class="variable">$R2</span><span class="selector-class">.fq</span><span class="selector-class">.gz</span> <span class="variable">$R1</span><span class="selector-class">.paired</span><span class="selector-class">.fq</span><span class="selector-class">.gz</span> <span class="variable">$R1</span><span class="selector-class">.unpaired</span><span class="selector-class">.fq</span><span class="selector-class">.gz</span> <span class="variable">$R2</span><span class="selector-class">.paired</span><span class="selector-class">.fq</span><span class="selector-class">.gz</span> <span class="variable">$R2</span><span class="selector-class">.unpaired</span><span class="selector-class">.fq</span><span class="selector-class">.gz</span> ILLUMINACLIP:<span class="variable">$adapter</span><span class="selector-class">.fa</span>:<span class="number">2</span>:<span class="number">30</span>:<span class="number">10</span> LEADING:<span class="number">3</span> TRAILING:<span class="number">3</span> SLIDINGWINDOW:<span class="number">4</span>:<span class="number">15</span> MINLEN:<span class="number">36</span></span><br></pre></td></tr></table></figure>
+        <h2 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h2><p>在上篇的比对中，我们需要纠结是否真的需要比对，如果你只需要知道已知基因的表达情况，那么可以选择alignment-free工具（例如salmon, sailfish)，如果你需要找到noval isoforms，那么就需要alignment-based工具（如HISAT2, STAR）。到了这一篇的基因（转录本）定量，需要考虑的因素就更加多了，以至于我不知道如何说清才能理清逻辑。</p>
+<p>定量分为三个水平</p>
+<ul>
+<li>基因水平(gene-level)</li>
+<li>转录本水平(transcript-level)</li>
+<li>外显子使用水平(exon-usage-level)。</li>
+</ul>
+<p>在<strong>基因水平</strong>上，常用的软件为HTSeq-count，featureCounts，BEDTools, Qualimap, Rsubread, GenomicRanges等。以常用的HTSeq-count为例，这些工具要解决的问题就是根据read和基因位置的overlap判断这个read到底是谁家的孩子。值得<strong>注意</strong>的是不同工具对multimapping reads处理方式也是不同的，例如HTSeq-count就直接当它们不存在。而Qualimpa则是一人一份，平均分配。</p>
+<p><img src="//upload-images.jianshu.io/upload_images/2013053-b58df35852061ed0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/678/format/webp" alt="image"></p>
+<p>对每个基因计数之后得到的count matrix再后续的分析中，要注意标准化的问题。如果你要比较同一个样本(within-sample)不同基因之间的表达情况，你就需要考虑到<strong>转录本长度</strong>，因为转录本越长，那么检测的片段也会更多，直接比较等于让小孩和大人进行赛跑。如果你是比较不同样本（across sample）同一个基因的表达情况，虽然不必在意转录本长度，但是你要考虑到<strong>测序深度</strong>（sequence depth)，毕竟测序深度越高，检测到的概率越大。除了这两个因素外，你还需要考虑GC%所导致的偏差，以及测序仪器的系统偏差。目前对read count标准化的算法有RPKM（SE）, FPKM（PE），TPM, TMM等，不同算法之间的差异与换算方法已经有文章进行整理和吐槽了。<strong>但是</strong>，有一些下游分析的软件会要求是输入的count matrix是原始数据，未经标准化，比如说DESeq2，这个时候你需要<strong>注意</strong>你上一步所用软件会不会进行标准化。</p>
+<p>在<strong>转录本水平</strong>上，一般常用工具为Cufflinks和它的继任者StringTie， eXpress。这些软件要处理的难题就时转录本亚型（isoforms）之间通常是有重叠的，当二代测序读长低于转录本长度时，如何进行区分？这些工具大多采用的都是expectation maximization（EM）。好在我们有三代测序。</p>
+<p>上述软件都是alignment-based，目前许多alignment-free软件，如kallisto, silfish, salmon，能够省去比对这一步，直接得到read count，在运行效率上更高。不过最近一篇文献[1]指出这类方法在估计丰度时存在样本特异性和读长偏差。</p>
+<p>在<strong>外显子使用水平</strong>上，其实和基因水平的统计类似。但是值得注意的是为了更好的计数，我们需要提供无重叠的外显子区域的gtf文件[2]。用于分析差异外显子使用的DEXSeq提供了一个Python脚本（dexseq_prepare_annotation.py）执行这个任务。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>计数分为三个水平： gene-level, transcript-level, exon-usage-level</p>
+<p>标准化方法： FPKM RPKM TMM TPM</p>
+<h2 id="输出表达矩阵"><a href="#输出表达矩阵" class="headerlink" title="输出表达矩阵"></a>输出表达矩阵</h2><p>在RNA-Seq分析中，每一个基因就是一个feature（特征？），而基因被认为是它的所有外显子的和集。在可变剪切分析中，可以单独把每个外显子当作一个feature。而在ChIP-Seq分析中，feature则是预先定义的结合域。但是确定一个read到底属于哪一个feature有时会非常棘手。因此HTSeq提供了三种模式，示意图见前一幅图</p>
+<ul>
+<li>the union of all the sets S(i) for mode union. This mode is recommended for most use cases.</li>
+<li>the intersection of all the sets S(i) for mode intersection-strict.</li>
+<li>the intersection of all non-empty sets S(i) for mode intersection-nonempty.</li>
+</ul>
+<p>基本用法非常的简单：</p>
 <blockquote>
-<p>参数设置说明（同一个命令下的不同参数可以用“：”来界定）：<br>$ 表示软件或文件所在的路径（建议使用绝对路径）<br> 其中<strong>R1.fq.gz</strong>以及 <strong>R2.fq.gz</strong> 为两个输入文件<br><strong>R1.paired.fq.gz</strong> 、<strong>R1.unpaired.fq.gz</strong>、 <strong>R2.paired.fq.gz</strong> 、<strong>R2.unpaired.fq.gz</strong> 为四个对应的输出文件<br>Phred33 设置碱基的质量格式，默认的是-phred64。</p>
+<p>htseq-count [options] <alignment_file> <gtf_file></p>
 </blockquote>
-<blockquote>
-<p>ILLUMINACLIP:$adapter.fa:2:30:10 adapter.fa为接头文件，2表示最大mismatch数，30表示palindrome模式下碱基的匹配阈值，10表示simple模式下碱基的匹配阈值。<br>LEADING: 3 表示切除reads 5’端碱基质量低于3的碱基。<br>TRAILING:3 表示切除3’ 端碱基质量低于3的碱基。<br>SLIDINGWINDOW:4:15 表示以4个碱基为窗口进行滑动，切除窗口内碱基平均质量小于15的。<br>MINLEN:36 丢弃以上步骤处理后，序列长度小于36的reads。</p>
-</blockquote>
-<p>运行代码如下：</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">trimmomatic PE -threads <span class="number">12</span> -phred33 /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R576_combined_R1.fastq.gz  /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R576_combined_R2.fastq.gz  /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R576_combined_R1.paired.fq.gz /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R576_c</span><br><span class="line">ombined_R1.unpaired.fq.gz /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R576_combined_R2.paired.fq.gz /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R576_combined_R2.unpaired.fq.gz ILLUMINACLI</span><br><span class="line">P:$adapter.fa:<span class="number">2</span>:<span class="number">30</span>:<span class="number">10</span> LEADING:<span class="number">3</span> TRAILING:<span class="number">3</span> SLIDINGWINDOW:<span class="number">4</span>:<span class="number">15</span> MINLEN:<span class="number">36</span> ; trimmomatic PE -threads <span class="number">12</span> -phred33 /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R577_combined_R1.fastq.gz  /mnt/e/</span><br><span class="line">sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R577_combined_R2.fastq.gz  /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R577_combined_R1.paired.fq.gz /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R577</span><br><span class="line">_combined_R1.unpaired.fq.gz /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R577_combined_R2.paired.fq.gz /mnt/e/sequence_data_YNY/<span class="number">20191030</span>_NGS_DATA/<span class="number">19</span>R577_combined_R2.unpaired.fq.gz ILLUMINAC</span><br><span class="line">LIP:$adapter.fa:<span class="number">2</span>:<span class="number">30</span>:<span class="number">10</span> LEADING:<span class="number">3</span> TRAILING:<span class="number">3</span> SLIDINGWINDOW:<span class="number">4</span>:<span class="number">15</span> MINLEN:<span class="number">36</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">conda install htseq</span><br><span class="line"><span class="comment"># 利用htseq-count对sort之后的bam文件进行reads计数</span></span><br><span class="line">htseq-count -r pos -f bam /home/cenhui2018/QWJ/sequence_data/<span class="number">2019103</span>0_NGS_DATA/<span class="number">19</span>R577_paired.hisat2_sorted.bam /home/cenhui2018/QWJ/sequence_data/genome/Anotation/gencode.vM23.<span class="keyword">annotation</span>.<span class="title">gtf</span> &gt; 19<span class="title">R577_paired</span>.<span class="title">count</span> 2&gt;/<span class="title">home</span>/<span class="title">cenhui2018</span>/<span class="title">QWJ</span>/<span class="title">sequence_data</span>/20191030<span class="title">_NGS_DATA</span>/19<span class="title">R577_htseq</span>.<span class="title">log</span> &amp;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://upload-images.jianshu.io/upload_images/3194654-b32de3de66fa88f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="开始执行去接头"></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/3194654-df2d26db48586472.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="运行结束"></p>
-<p>最终运行出的结果输出文件有四个，R1.paired.fq.gz 、R1.unpaired.fq.gz、 R2.paired.fq.gz 、R2.unpaired.fq.gz ，如果在接下来要进行序列比对的话用的文件只需要使用到两个paired文件。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/3194654-7162d46bf4432054.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="输出结果"></p>
-<p>到这里，我们的RNAseq流程中的原始数据处理(clean data)这一步就已经到这里就告一段落了。</p>
-<h1 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h1><p><a href="https://www.sohu.com/a/252244330_100269283" target="_blank" rel="noopener">https://www.sohu.com/a/252244330_100269283</a><br><a href="https://zhuanlan.zhihu.com/p/61847802" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/61847802</a></p>
+<p>运行的时间会比较久，所以可以去了解不同参数的用法了，其中比较常用的为：</p>
+<ul>
+<li>-f bam/sam： 指定输入文件格式，默认SAM</li>
+<li>-r name/pos: 你需要利用samtool sort对数据根据read name或者位置进行排序，默认是name</li>
+<li>-s yes/no/reverse: 数据是否来自于strand-specific assay。DNA是双链的，所以需要判断到底来自于哪条链。如果选择了no， 那么每一条read都会跟正义链和反义链进行比较。默认的yes对于双端测序表示第一个read都在同一个链上，第二个read则在另一条链上。</li>
+<li>-a 最低质量， 剔除低于阈值的read</li>
+<li>-m 模式 union（默认）, intersection-strict and intersection-nonempty。一般而言就用默认的，作者也是这样认为的。</li>
+<li>-i id attribute: 在GTF文件的最后一栏里，会有这个基因的多个命名方式（如下）， RNA-Seq数据分析常用的是gene_id， 当然你可以写一个脚本替换成其他命名方式。</li>
+</ul>
+<p>对count数据进行查看</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 利用wc指令我们可以计算count文件的行数</span></span><br><span class="line">&gt; wc -l *.<span class="built_in">count</span></span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-470a0a097f2c6e28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="统计count文件的行数"></p>
+<p>看下每个文件的格式，</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看前4行,第一列ensembl_gene_id,第二列read_count计数</span></span><br><span class="line">&gt; $ head -n <span class="number">4</span> *.<span class="built_in">count</span>     </span><br><span class="line"> <span class="comment"># 查看后四行</span></span><br><span class="line">&gt; $ tail -n <span class="number">4</span> *.<span class="built_in">count</span></span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-01520ab9d5e7a426.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="查看count文件的首行及末行"></p>
+<h4 id="合并表达矩阵并进行注释（R中进行）"><a href="#合并表达矩阵并进行注释（R中进行）" class="headerlink" title="合并表达矩阵并进行注释（R中进行）"></a>合并表达矩阵并进行注释（R中进行）</h4><p>上一步得到的2个单独的矩阵文件，现在要把这<strong>2个文件合并为行为基因名，列为样本名，中间为count的矩阵文件</strong>。</p>
+<ul>
+<li><h6 id="从上面看出需要至少做两步工作才能更好理解和往下进行分析"><a href="#从上面看出需要至少做两步工作才能更好理解和往下进行分析" class="headerlink" title="从上面看出需要至少做两步工作才能更好理解和往下进行分析"></a>从上面看出需要至少做两步工作才能更好理解和往下进行分析</h6></li>
+</ul>
+<h6 id="第一，需要把2个文件合并；"><a href="#第一，需要把2个文件合并；" class="headerlink" title="第一，需要把2个文件合并；"></a>第一，需要把2个文件合并；</h6><h6 id="第二，需要把ensembl-gene-id转换为gene-symbol-（这一步不进行也行，后面还需要）"><a href="#第二，需要把ensembl-gene-id转换为gene-symbol-（这一步不进行也行，后面还需要）" class="headerlink" title="第二，需要把ensembl_gene_id转换为gene_symbol;（这一步不进行也行，后面还需要）"></a>第二，需要把ensembl_gene_id转换为gene_symbol;（这一步不进行也行，后面还需要）</h6><ul>
+<li>熟悉python的朋友可以参考<a href="https://www.jianshu.com/p/e9742bbf83b9" target="_blank" rel="noopener">这篇文章</a></li>
+<li>我用R中的merge命令来处理，参考<a href="https://www.jianshu.com/p/24cf44b610a7" target="_blank" rel="noopener">这里</a>和<a href="https://www.jianshu.com/p/e9742bbf83b9" target="_blank" rel="noopener">这里</a></li>
+</ul>
+<p>运行R设置工作路径并查看当前目录下的文件</p>
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="function"><span class="title">setwd</span>(<span class="string">"/home/cenhui2018/QWJ/sequence_data/20191030_NGS_DATA/"</span>)</span></span><br><span class="line">&gt; <span class="variable">list.files</span>()</span><br></pre></td></tr></table></figure>
+<p>运行结果</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-b70af825113864eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h6 id="1-载入数据，添加列名"><a href="#1-载入数据，添加列名" class="headerlink" title="(1) 载入数据，添加列名"></a>(1) 载入数据，添加列名</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 防止R自动把字符串string的列辨认成factor</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> options(stringAsFactor =  FALSE)  </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 从19R576_paired.count文件中读取数据，并添加列名，之后生成新文件命名为control_W55</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> control_W55 &lt;- read.table(<span class="string">"19R576_paired.count"</span>,sep = <span class="string">"\t"</span>,col.names=c(<span class="string">"gene_id"</span>,<span class="string">"control_W55"</span>))</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看前6行</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> head(control_W55)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 类似的方法处理19R577_paired.count，并存储到</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> test_K54 &lt;- read.table(<span class="string">"19R577_paired.count"</span>,sep = <span class="string">"\t"</span>,col.names=c(<span class="string">"gene_id"</span>,<span class="string">"test_K54"</span>))</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-5948b355119d8bec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>######(2)数据整合<br><strong>merge进行整合</strong><br>gencode的注释文件中的gene_id（如ENSMUSG00000105298.13_3）在EBI是不能搜索到的，所以用gsub功能只保留ENSMUSG00000105298这部分<br>处理之前先看一下,也就是最后5行是我们不需要的，可以删除</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-1fa21910e16f20e7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="查看文件的最后五行"></p>
+<p>整合文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将control_w55和test_K54这两个文件通过<span class="string">"gene_id"</span>进行merge，生成新的merge好的文件raw_count</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> raw_count &lt;- merge(control_W55,test_K54, by = <span class="string">"gene_id"</span>)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看merge后的文件的前6行</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> head(raw_count)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看后六行</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> tail(raw_count)</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-04cb464c28b58a9b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="合并文件并查看前六行"><br><img src="https://upload-images.jianshu.io/upload_images/3194654-3eae806f3b0f9875.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="查看合并后的文件的后六行"></p>
+<p>######删除前5行<br>这里要注意，因为读入之后顺序变了，删除的时候看下删除的是哪些行</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; raw_count_filt &lt;- raw_count[<span class="number">-1</span>:<span class="number">-5</span>,]</span><br><span class="line">&gt; head(raw_count_filt)</span><br></pre></td></tr></table></figure>
+<p>删除之后的结果：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-52b3b3550c8494b4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>######因为我们无法在EBI数据库上直接搜索找到ENSMUSG00000024045.5这样的基因，只能是ENSMUSG00000024045的整数，没有小数点，所以需要进一步替换为整数的形式。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 第一步通过gsub工具将匹配到的.以及后面的数字连续匹配并替换为空，并赋值给ENSEMBL</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">ENSEMBL &lt;- gsub(<span class="string">"\\.\\d*"</span>, <span class="string">""</span>, raw_count_filt<span class="variable">$gene_id</span>) </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将ENSEMBL重新添加到raw_count_filt1矩阵</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">row.names(raw_count_filt) &lt;- ENSEMBL</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看&gt;head(raw_count_filt)</span></span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-51cc729134d0ca5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>可以将最后得到的raw_count_filt文件通过save()函数保存成.Rdata文件，然后复制放在自己的桌面，然后用自己的Rstudio打开</p>
+<h6 id="3-对基因进行注释-获取gene-symbol"><a href="#3-对基因进行注释-获取gene-symbol" class="headerlink" title="(3) 对基因进行注释-获取gene_symbol"></a>(3) 对基因进行注释-获取gene_symbol</h6><h6 id="以下两种方式可以进行"><a href="#以下两种方式可以进行" class="headerlink" title="以下两种方式可以进行"></a>以下两种方式可以进行</h6><p>第一：去<a href="https://biodbnet-abcc.ncifcrf.gov/db/db2db.php" target="_blank" rel="noopener">这里</a>或<a href="https://www.biotools.fr/mouse/ensembl_symbol_converter" target="_blank" rel="noopener">这里</a>的网页版，输入列表即可输出，不再赘述<br>第二：用bioMart对ensembl_id转换成gene_symbol<br>bioMart包是一个连接bioMart数据库的R语言接口，能通过这个软件包自由连接到bioMart数据库</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 首先检查BioManager包是否安装</span></span><br><span class="line"><span class="keyword">if</span> (!requireNamespace(<span class="string">"BiocManager"</span>, quietly = TRUE))</span><br><span class="line">    install.packages(<span class="string">"BiocManager"</span>)</span><br><span class="line"><span class="meta"># 如果BioManager包已经安装，则通过BioManager包安装biomaRt包</span></span><br><span class="line">BiocManager::install(<span class="string">"biomaRt"</span>)</span><br><span class="line"><span class="meta"># 因为我的文件是放在桌面上的，所以先设置R的工作目录为桌面路径</span></span><br><span class="line">&gt; setwd(<span class="string">"C://Users/My/Desktop/"</span>)</span><br><span class="line"><span class="meta"># 加载放在桌面上的.Rdata文件</span></span><br><span class="line">&gt; load(<span class="string">"raw_count.Rdata"</span>)</span><br><span class="line"><span class="meta"># 加载所需要的R包</span></span><br><span class="line">&gt; library(<span class="string">'biomaRt'</span>)</span><br><span class="line">&gt; library(<span class="string">"curl"</span>)</span><br><span class="line"><span class="meta"># 用bioMart对差异表达基因进行注释</span></span><br><span class="line">&gt; mart &lt;- useDataset(<span class="string">"mmusculus_gene_ensembl"</span>, useMart(<span class="string">"ensembl"</span>))</span><br><span class="line">&gt; my_ensembl_gene_id&lt;-row.names(raw_count_filt)</span><br><span class="line">&gt; mms_symbols&lt;- getBM(attributes=c(<span class="string">'ensembl_gene_id'</span>,<span class="string">'external_gene_name'</span>,<span class="string">"description"</span>),filters = <span class="string">'ensembl_gene_id'</span>, values = my_ensembl_gene_id, mart = mart)</span><br></pre></td></tr></table></figure>
+<p>执行完之后需要等待一段时间提交检索，下方会有一个进度条</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-6a199fb658862085.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>基因注释结束后，查看注释结果</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-abbae3370602ce6d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="基因注释结束后的结果"></p>
+<p>####合并数据成一个文件</p>
+<p>注意：合并的话两个数据必须有共同的列名，我们先看一下</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-216b5ca4d3e7504a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>可见，两个文件没有共同的列名，所以要先给’raw_count_filt’添加一个‘ensembl_gene_id’的列名<br>方法如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将raw_count_filt的行名赋值到一个ensembl_gene_id的变量</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ensembl_gene_id&lt;-rownames(raw_count_filt)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将行名单独变成一列加到raw_count_filt文件中</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> raw_count_filt &lt;- cbind(ensembl_gene_id,raw_count_filt)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加列名</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> colnames(raw_count_filt)[1] &lt;- c(<span class="string">"ensembl_gene_id"</span>)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将raw_count_filt文件和mms_symbols文件通过ensembl_gene_id而merge在一起，生成新的文件</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> diff_name&lt;-merge(raw_count_filt,mms_symbols,by=<span class="string">"ensembl_gene_id"</span>)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看新文件前6行</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> head(diff_name)</span></span><br></pre></td></tr></table></figure>
+<p>代码执行结果：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-f1953191a5dde621.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="执行结果"></p>
+<p>现在成功地生成了一个带有基因名称的count表达矩阵</p>
+<p>参考链接：<br><a href="https://blog.csdn.net/lztttao/article/details/82086346" target="_blank" rel="noopener">https://blog.csdn.net/lztttao/article/details/82086346</a><br><a href="https://www.jianshu.com/p/3a0e1e3e41d0" target="_blank" rel="noopener">https://www.jianshu.com/p/3a0e1e3e41d0</a></p>
 
       
     </div>
@@ -518,13 +571,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/bioinformatics/" rel="tag"># bioinformatics</a>
+            <a href="/tags/htseq-count/" rel="tag"># htseq-count</a>
           
-            <a href="/tags/fastq/" rel="tag"># fastq</a>
-          
-            <a href="/tags/fastqc/" rel="tag"># fastqc</a>
-          
-            <a href="/tags/Trimmomatic/" rel="tag"># Trimmomatic</a>
+            <a href="/tags/bioMart/" rel="tag"># bioMart</a>
           
         </div>
       
@@ -537,8 +586,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/15/conda%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="next" title="Conda的安装与使用">
-                <i class="fa fa-chevron-left"></i> Conda的安装与使用
+              <a href="/2020/03/19/3-RNAseq--Hisat2%E8%BF%9B%E8%A1%8C%E5%BA%8F%E5%88%97%E6%AF%94%E5%AF%B9%E5%8F%8ASamtools%E6%A0%BC%E5%BC%8F%E8%BD%AC%E5%8C%96/" rel="next" title="3-RNAseq--Hisat2进行序列比对及Samtools格式转化">
+                <i class="fa fa-chevron-left"></i> 3-RNAseq--Hisat2进行序列比对及Samtools格式转化
               </a>
             
           </div>
@@ -547,8 +596,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/03/19/2-RNAseq--%E5%AF%B9RNAseq%E6%B5%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%EF%BC%88fastqc%EF%BC%89/" rel="prev" title="2-RNAseq--对RNAseq测序数据质量控制（fastqc）">
-                2-RNAseq--对RNAseq测序数据质量控制（fastqc） <i class="fa fa-chevron-right"></i>
+              <a href="/2020/03/19/5-RNAseq--%E6%97%A0%E9%87%8D%E5%A4%8D%E5%B7%AE%E5%BC%82%E5%9F%BA%E5%9B%A0%E5%88%86%E6%9E%90%EF%BC%88edgeR%E5%8C%85%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%89/" rel="prev" title="5-RNAseq--无重复差异基因分析（edgeR包的使用）">
+                5-RNAseq--无重复差异基因分析（edgeR包的使用） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -704,7 +753,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#fastq文件"><span class="nav-number">1.</span> <span class="nav-text">fastq文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对数据进行质控（去接头和低质量的reads以及Fastqc）"><span class="nav-number">2.</span> <span class="nav-text">对数据进行质控（去接头和低质量的reads以及Fastqc）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trimmomatic-简介"><span class="nav-number">2.1.</span> <span class="nav-text">Trimmomatic 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Trimmomatic-下载"><span class="nav-number">2.1.1.</span> <span class="nav-text">Trimmomatic 下载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-在Linux系统下通过命令行进行下载安装"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">(一)在Linux系统下通过命令行进行下载安装</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#二-通过conda直接一键安装"><span class="nav-number">2.1.1.1.1.</span> <span class="nav-text">(二)通过conda直接一键安装</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Trimmomatic-质控用法"><span class="nav-number">2.1.2.</span> <span class="nav-text">Trimmomatic 质控用法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#◆-1-SE-模式"><span class="nav-number">2.1.2.0.1.</span> <span class="nav-text">◆ 1. SE 模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#◆-2-PE模式"><span class="nav-number">2.1.2.0.2.</span> <span class="nav-text">◆ 2. PE模式</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接："><span class="nav-number">3.</span> <span class="nav-text">参考链接：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#理论基础"><span class="nav-number">1.</span> <span class="nav-text">理论基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出表达矩阵"><span class="nav-number">2.</span> <span class="nav-text">输出表达矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#合并表达矩阵并进行注释（R中进行）"><span class="nav-number">2.0.1.</span> <span class="nav-text">合并表达矩阵并进行注释（R中进行）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#从上面看出需要至少做两步工作才能更好理解和往下进行分析"><span class="nav-number">2.0.1.0.1.</span> <span class="nav-text">从上面看出需要至少做两步工作才能更好理解和往下进行分析</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#第一，需要把2个文件合并；"><span class="nav-number">2.0.1.0.2.</span> <span class="nav-text">第一，需要把2个文件合并；</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#第二，需要把ensembl-gene-id转换为gene-symbol-（这一步不进行也行，后面还需要）"><span class="nav-number">2.0.1.0.3.</span> <span class="nav-text">第二，需要把ensembl_gene_id转换为gene_symbol;（这一步不进行也行，后面还需要）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-载入数据，添加列名"><span class="nav-number">2.0.1.0.4.</span> <span class="nav-text">(1) 载入数据，添加列名</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-对基因进行注释-获取gene-symbol"><span class="nav-number">2.0.1.0.5.</span> <span class="nav-text">(3) 对基因进行注释-获取gene_symbol</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#以下两种方式可以进行"><span class="nav-number">2.0.1.0.6.</span> <span class="nav-text">以下两种方式可以进行</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>

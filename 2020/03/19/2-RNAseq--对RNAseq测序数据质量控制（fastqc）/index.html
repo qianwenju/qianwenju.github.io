@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="fastqc,fastc," />
 
 
 
@@ -79,17 +79,27 @@
 
 
 
-<meta name="description" content="UCAS小硕一枚,21世纪生物搬砖工">
-<meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+<meta name="description" content="质量汇报生成与读取fastq质量汇报使用命令fastqc -o &lt;output dir&gt; &lt;seqfile1,seqfile2..&gt;来进行质量报告。  123456# 下载fastqc工具包$ wget https:&#x2F;&#x2F;www.bioinformatics.babraham.ac.uk&#x2F;projects&#x2F;fastqc&#x2F;fastqc_v0.11.8.zip# 解压&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2-RNAseq--对RNAseq测序数据质量控制（fastqc）">
+<meta property="og:url" content="http://yoursite.com/2020/03/19/2-RNAseq--%E5%AF%B9RNAseq%E6%B5%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%EF%BC%88fastqc%EF%BC%89/index.html">
 <meta property="og:site_name" content="小钱的个人博客">
-<meta property="og:description" content="UCAS小硕一枚,21世纪生物搬砖工">
+<meta property="og:description" content="质量汇报生成与读取fastq质量汇报使用命令fastqc -o &lt;output dir&gt; &lt;seqfile1,seqfile2..&gt;来进行质量报告。  123456# 下载fastqc工具包$ wget https:&#x2F;&#x2F;www.bioinformatics.babraham.ac.uk&#x2F;projects&#x2F;fastqc&#x2F;fastqc_v0.11.8.zip# 解压&amp;">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-03-15T13:05:55.000Z">
-<meta property="article:modified_time" content="2020-03-15T13:35:39.711Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-963d416408466a62.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-95c486f10220c207.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-2711614ef1a63dfe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-a5a49a0ef6ebbca5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-758ed1c39abb493c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-3777a0a933d6ea7b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3194654-46b7f01bc01e0b09.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2020-03-19T14:09:31.000Z">
+<meta property="article:modified_time" content="2020-03-19T14:11:58.160Z">
 <meta property="article:author" content="WENJU QIAN">
+<meta property="article:tag" content="fastqc">
+<meta property="article:tag" content="fastc">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3194654-963d416408466a62.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -119,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/19/2-RNAseq--对RNAseq测序数据质量控制（fastqc）/"/>
 
 
 
 
 
-  <title>tags | 小钱的个人博客</title>
+  <title>2-RNAseq--对RNAseq测序数据质量控制（fastqc） | 小钱的个人博客</title>
   
 
 
@@ -300,40 +310,221 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/19/2-RNAseq--%E5%AF%B9RNAseq%E6%B5%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%EF%BC%88fastqc%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WENJU QIAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head_logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小钱的个人博客">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">tags</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-                13 tags in total
+          <h1 class="post-title" itemprop="name headline">2-RNAseq--对RNAseq测序数据质量控制（fastqc）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-19T22:09:31+08:00">
+                2020-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/19/2-RNAseq--%E5%AF%B9RNAseq%E6%B5%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%EF%BC%88fastqc%EF%BC%89/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/19/2-RNAseq--%E5%AF%B9RNAseq%E6%B5%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6%EF%BC%88fastqc%EF%BC%89/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  942
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  3
+                </span>
+              
             </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/Trimmomatic/" style="font-size: 12px; color: #ccc">Trimmomatic</a> <a href="/tags/alignment/" style="font-size: 12px; color: #ccc">alignment</a> <a href="/tags/bioMart/" style="font-size: 12px; color: #ccc">bioMart</a> <a href="/tags/bioinformatics/" style="font-size: 30px; color: #111">bioinformatics</a> <a href="/tags/conda/" style="font-size: 12px; color: #ccc">conda</a> <a href="/tags/di%EF%AC%80erential-gene-analysis/" style="font-size: 12px; color: #ccc">diﬀerential gene analysis</a> <a href="/tags/edgeR/" style="font-size: 12px; color: #ccc">edgeR</a> <a href="/tags/fastc/" style="font-size: 12px; color: #ccc">fastc</a> <a href="/tags/fastq/" style="font-size: 12px; color: #ccc">fastq</a> <a href="/tags/fastqc/" style="font-size: 30px; color: #111">fastqc</a> <a href="/tags/hesat2/" style="font-size: 12px; color: #ccc">hesat2</a> <a href="/tags/htseq-count/" style="font-size: 12px; color: #ccc">htseq-count</a> <a href="/tags/samtools/" style="font-size: 12px; color: #ccc">samtools</a>
-            </div>
-          </div>
-        
-      </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h2 id="质量汇报生成与读取"><a href="#质量汇报生成与读取" class="headerlink" title="质量汇报生成与读取"></a>质量汇报生成与读取</h2><h3 id="fastq质量汇报"><a href="#fastq质量汇报" class="headerlink" title="fastq质量汇报"></a>fastq质量汇报</h3><p>使用命令<code>fastqc -o &lt;output dir&gt; &lt;seqfile1,seqfile2..&gt;</code>来进行质量报告。</p>
+ <figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 下载fastqc工具包</span><br><span class="line">$ wget https:<span class="comment">//www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip</span></span><br><span class="line"># 解压</span><br><span class="line">&amp; unzip fastqc_v0.<span class="number">11.8</span>.zip</span><br><span class="line"># 执行fastqc</span><br><span class="line">&amp; ~FastQC<span class="regexp">/./</span>fastqc -f fastq -o <span class="regexp">/home/</span>cenhui2018<span class="regexp">/QWJ/</span>sequence_data<span class="regexp">/20191030_NGS_DATA/</span>result <span class="regexp">/home/</span>cenhui2018<span class="regexp">/QWJ/</span>sequence_data<span class="regexp">/20191030_NGS_DATA/</span><span class="number">19</span>R576_combined_R1.fastq</span><br></pre></td></tr></table></figure>
+<p>需要注意的是./fastqc前面的”.”不可以省略</p>
+<p>每个fastqc文件会获得一个质量分析报告，来描述此次RNA-seq的测序质量。 获取质量报告如图：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-963d416408466a62.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Fastqc basic information"></p>
+<h5 id="Basic-Statistics"><a href="#Basic-Statistics" class="headerlink" title="Basic Statistics"></a>Basic Statistics</h5><p>从read水平来总览，判断测序质量。 Encoding ：测序平台的版本，因为不同版本的 error p的计算方法不一样。 Total sequence：测序深度。一共测序的read数。是质量分析的主要参数。 Sequence length：测序长度。 %GC：GC碱基含量比，一般是物种特异性，比如人类是42%左右。</p>
+<h5 id="Perbase-sequence-quality"><a href="#Perbase-sequence-quality" class="headerlink" title="Perbase sequence quality"></a>Perbase sequence quality</h5><p>横坐标： 第1-100个测序得到的碱基 纵坐标： 测序质量评估。这里的Q=-10*lg10(error P),即20%代表1%的错误读取率，30%代表0.1%的错误读取率 箱型图： 红色线，是某个顺序下测序碱基所有测序质量的中位数。黄色块，是测序质量在25%-75%区域。蓝色线，平均数。 一般要求： 测序箱型图10%的线大于Q=20。Q20过滤法。</p>
+<h5 id="per-tail-sequence-quality"><a href="#per-tail-sequence-quality" class="headerlink" title="per tail sequence quality"></a>per tail sequence quality</h5><p>横坐标：同上。 纵坐标：tail的index编号。 目的：防止测序过程中某些tail受不可控因素测序质量低。 标准：蓝色表示质量高，浅色或暖色表示质量低，后续的分析可以去除低质量tail。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-95c486f10220c207.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="per tail sequence quality"></p>
+<h5 id="Per-sequence-quality-scores"><a href="#Per-sequence-quality-scores" class="headerlink" title="Per sequence quality scores"></a>Per sequence quality scores</h5><p>从read的总体测序质量分布来判定此次的测序质量，是质量分析的重要标准之一。 横坐标：表示read的测序质量Q=-10*lg10(error P)。 纵坐标：表示在该Q值下的read 的数量 标准：需要集中在高分区</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-2711614ef1a63dfe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Per sequence quality scores"></p>
+<h5 id="Per-base-sequence-content"><a href="#Per-base-sequence-content" class="headerlink" title="Per base sequence content"></a>Per base sequence content</h5><p>横坐标：1-100的测序碱基位置 纵坐标：碱基百分比 标准：理论上，ATCG碱基的分布应该差别不大，即四条线应该大致平行状态。如果AT或CG差异超过10%，此项检测是危险的。一般是测序机器前几个碱基测序时候因为状态调整导致测序略有偏差，如果前几个碱基偏差较大，可以在后期将前几个碱基切掉。造成这个偏差较大的原因重要是由于测序数据中的adapter没有clean干净。所以在接下来的数据处理中需要对测序数据进行clean data的处理，下一个章节会详细介绍clean data的步骤。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-a5a49a0ef6ebbca5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Per base sequence content"></p>
+<h5 id="Sequence-Length-Distribution"><a href="#Sequence-Length-Distribution" class="headerlink" title="Sequence Length Distribution"></a>Sequence Length Distribution</h5><p>统计read的碱基长度，本例理论上测序应该全是150bp。 横坐标：是read的碱基长度 纵坐标：是该长度下的read数量</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-758ed1c39abb493c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Sequence Length Distribution"></p>
+<h5 id="Per-sequence-GC-content"><a href="#Per-sequence-GC-content" class="headerlink" title="Per sequence GC content"></a>Per sequence GC content</h5><p>横坐标：每个read的平局GC含量占比 纵坐标：一定GC比下的read数 标准：蓝色是理论值，红色是真实值。两者接近是比较好的状态。如果有双峰，可能混有了其他物种的DNA序列。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-3777a0a933d6ea7b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Per sequence GC content"></p>
+<h5 id="Adapter-Content"><a href="#Adapter-Content" class="headerlink" title="Adapter Content"></a>Adapter Content</h5><p>一般测序在初步生成fastq文件时候，adapter会被去除，但是有的会没有去除或者遗漏部分adapter。所以这一步是检测RNA-seq测序过程中adapter是否去除。如果没有去除会严重影响后续的比对工作。没有去除的adapter在质量处理环节会被处理掉。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3194654-46b7f01bc01e0b09.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Adapter Content"></p>
+<ol start="2">
+<li>multiqc质量报告<br>multiqc可以对几个fastqc报告文件进行总结并汇总到一个报告文件中，以更直观到防止展示。使用方法</li>
+</ol>
+<blockquote>
+<p>multiqc <analysis directory></p>
+</blockquote>
+<p>参考链接：<br><a href="https://zhuanlan.zhihu.com/p/61847802" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/61847802</a></p>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/fastqc/" rel="tag"># fastqc</a>
+          
+            <a href="/tags/fastc/" rel="tag"># fastc</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/16/1-RNAseq--%E6%B5%8B%E5%BA%8F%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%EF%BC%88Clean%20%20data%EF%BC%89/" rel="next" title="1-RNAseq--测序原始数据处理（Clean  data）">
+                <i class="fa fa-chevron-left"></i> 1-RNAseq--测序原始数据处理（Clean  data）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/19/3-RNAseq--Hisat2%E8%BF%9B%E8%A1%8C%E5%BA%8F%E5%88%97%E6%AF%94%E5%AF%B9%E5%8F%8ASamtools%E6%A0%BC%E5%BC%8F%E8%BD%AC%E5%8C%96/" rel="prev" title="3-RNAseq--Hisat2进行序列比对及Samtools格式转化">
+                3-RNAseq--Hisat2进行序列比对及Samtools格式转化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -342,6 +533,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -362,8 +560,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -443,6 +650,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#质量汇报生成与读取"><span class="nav-number">1.</span> <span class="nav-text">质量汇报生成与读取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fastq质量汇报"><span class="nav-number">1.1.</span> <span class="nav-text">fastq质量汇报</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Basic-Statistics"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">Basic Statistics</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Perbase-sequence-quality"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">Perbase sequence quality</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#per-tail-sequence-quality"><span class="nav-number">1.1.0.3.</span> <span class="nav-text">per tail sequence quality</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Per-sequence-quality-scores"><span class="nav-number">1.1.0.4.</span> <span class="nav-text">Per sequence quality scores</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Per-base-sequence-content"><span class="nav-number">1.1.0.5.</span> <span class="nav-text">Per base sequence content</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Sequence-Length-Distribution"><span class="nav-number">1.1.0.6.</span> <span class="nav-text">Sequence Length Distribution</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Per-sequence-GC-content"><span class="nav-number">1.1.0.7.</span> <span class="nav-text">Per sequence GC content</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Adapter-Content"><span class="nav-number">1.1.0.8.</span> <span class="nav-text">Adapter Content</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

@@ -246,8 +246,8 @@
 <p>参考链接：<br><a href="https://zhuanlan.zhihu.com/p/61847802" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/61847802</a></p>
 ]]></content>
       <tags>
-        <tag>fastqc</tag>
         <tag>fastc</tag>
+        <tag>fastqc</tag>
       </tags>
   </entry>
   <entry>
@@ -299,9 +299,9 @@
         <category>RNA-seq</category>
       </categories>
       <tags>
+        <tag>fastqc</tag>
         <tag>bioinformatics</tag>
         <tag>fastq</tag>
-        <tag>fastqc</tag>
         <tag>Trimmomatic</tag>
       </tags>
   </entry>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>临时博客文件</title>
+    <title>临时博客</title>
     <url>/2020/03/27/11/</url>
-    <content><![CDATA[<script src="/crypto-js.js"></script><script src="/mcommon.js"></script><h3 id="encrypt-message">Please enter the password to read the blog.</h3><link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script> <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> <div id="security"> <div> <div class="input-group"> <input type="text" class="form-control" aria-label="Enter the password." id="pass"/> <div class="input-group-btn"> <button type="button" class="btn btn-default" onclick="decryptAES()">Decrypt</button> </div> </div> </div> </div> <div id="encrypt-blog" style="display:none"> U2FsdGVkX1+ZtDadtVtTTknNjDqP9c/ULPBSTINsbsddL8RFB/60lcSrcNlHJdd5VyX3f847JFRSx/o32ZLlNjNpj9L207N7VY9wPMHpBh/A+b7e6wpzFKmgfVE2UPO8 </div>]]></content>
+    <content><![CDATA[<script src="/crypto-js.js"></script><script src="/mcommon.js"></script><h3 id="encrypt-message">Please enter the password to read the blog.</h3><link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script> <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> <div id="security"> <div> <div class="input-group"> <input type="text" class="form-control" aria-label="Enter the password." id="pass"/> <div class="input-group-btn"> <button type="button" class="btn btn-default" onclick="decryptAES()">Decrypt</button> </div> </div> </div> </div> <div id="encrypt-blog" style="display:none"> U2FsdGVkX1+SZ2rGveK70YWzlGonIqmyGfZnp2cVPJI= </div>]]></content>
   </entry>
   <entry>
     <title>5-RNAseq--无重复差异基因分析（edgeR包的使用）</title>
@@ -250,8 +250,8 @@
 <p>参考链接：<br><a href="https://zhuanlan.zhihu.com/p/61847802" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/61847802</a></p>
 ]]></content>
       <tags>
-        <tag>fastqc</tag>
         <tag>fastc</tag>
+        <tag>fastqc</tag>
       </tags>
   </entry>
   <entry>
@@ -303,9 +303,9 @@
         <category>RNA-seq</category>
       </categories>
       <tags>
+        <tag>fastqc</tag>
         <tag>bioinformatics</tag>
         <tag>fastq</tag>
-        <tag>fastqc</tag>
         <tag>Trimmomatic</tag>
       </tags>
   </entry>

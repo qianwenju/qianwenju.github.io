@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="R," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Q1研究者检测了6位胃癌病人的肿瘤样本和对应的癌旁正常组织样本中的TP53的表达量，试分别用wilcoxon signed-rank test和signed test，检测TP53的表达量在胃癌患者的肿瘤与正常样本中是否存在差异。 表1 胃癌患者的肿瘤样本和正常样本中TP53的表达量(FPKM)肿瘤样本    | 30.09 | 18.68    | 19.90 | 5.13 | 39.69 |">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【R&lt;-练习】生物统计学练习2">
+<meta property="og:url" content="http://yoursite.com/2020/03/31/%E3%80%90R-%E7%BB%83%E4%B9%A0%E3%80%91%E7%94%9F%E7%89%A9%E7%BB%9F%E8%AE%A1%E5%AD%A6%E7%BB%83%E4%B9%A02/index.html">
+<meta property="og:site_name" content="小钱的个人博客">
+<meta property="og:description" content="Q1研究者检测了6位胃癌病人的肿瘤样本和对应的癌旁正常组织样本中的TP53的表达量，试分别用wilcoxon signed-rank test和signed test，检测TP53的表达量在胃癌患者的肿瘤与正常样本中是否存在差异。 表1 胃癌患者的肿瘤样本和正常样本中TP53的表达量(FPKM)肿瘤样本    | 30.09 | 18.68    | 19.90 | 5.13 | 39.69 |">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-31T07:03:19.000Z">
+<meta property="article:modified_time" content="2020-03-31T07:00:14.970Z">
+<meta property="article:author" content="WENJU QIAN">
+<meta property="article:tag" content="R">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/31/【R-练习】生物统计学练习2/"/>
+
+
+
+
+
+  <title>【R<-练习】生物统计学练习2 | 小钱的个人博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<script src="/live2d-widget/autoload.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta custom-logo">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小钱的个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">WENJU QIAN's personal website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-love">
+          <a href="/love/s/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            love
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            Sitemap
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/31/%E3%80%90R-%E7%BB%83%E4%B9%A0%E3%80%91%E7%94%9F%E7%89%A9%E7%BB%9F%E8%AE%A1%E5%AD%A6%E7%BB%83%E4%B9%A02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WENJU QIAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head_logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小钱的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【R<-练习】生物统计学练习2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-31T15:03:19+08:00">
+                2020-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/biostatistics/" itemprop="url" rel="index">
+                    <span itemprop="name">biostatistics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/31/%E3%80%90R-%E7%BB%83%E4%B9%A0%E3%80%91%E7%94%9F%E7%89%A9%E7%BB%9F%E8%AE%A1%E5%AD%A6%E7%BB%83%E4%B9%A02/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/31/%E3%80%90R-%E7%BB%83%E4%B9%A0%E3%80%91%E7%94%9F%E7%89%A9%E7%BB%9F%E8%AE%A1%E5%AD%A6%E7%BB%83%E4%B9%A02/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Q1<br>研究者检测了6位胃癌病人的肿瘤样本和对应的癌旁正常组织样本中的TP53的表达量，试分别用wilcoxon signed-rank test和signed test，检测TP53的表达量在胃癌患者的肿瘤与正常样本中是否存在差异。</p>
+<p>表1 胃癌患者的肿瘤样本和正常样本中TP53的表达量(FPKM)<br>肿瘤样本    | 30.09 | 18.68    | 19.90 | 5.13 | 39.69 | 30.87 |<br>:-: | :-: | :-: | :-: | :-:| :-:| :-:<br>正常样本    | 30.25 | 17.14    | 25.79 | 8.64 | 36.42 | 31.93 |</p>
+<p>解：根据题意作出以下假设：<br><strong>step1：</strong><br>H0：TP53的表达量在胃癌患者的肿瘤与正常样本中不存在差异。<br>HA：TP53的表达量在胃癌患者的肿瘤与正常样本中存在差异。</p>
+<h6 id="1-wilcoxon-signed-rank-test"><a href="#1-wilcoxon-signed-rank-test" class="headerlink" title="1. wilcoxon signed-rank test"></a>1. wilcoxon signed-rank test</h6><p><strong>step2：</strong>输入数据，调用wilcox.test()命令，作wilcoxon signed-rank test</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; x&lt;-c(<span class="number">30.09</span>,<span class="number">18.68</span>,<span class="number">19.90</span>,<span class="number">5.13</span>,<span class="number">39.69</span>,<span class="number">30.87</span>)</span><br><span class="line">&gt; y&lt;-c(<span class="number">30.25</span>,<span class="number">17.14</span>,<span class="number">25.79</span>,<span class="number">8.64</span>,<span class="number">36.42</span>,<span class="number">31.93</span>)</span><br><span class="line">&gt; wilcox.test(x,y,alternative = <span class="string">"two.sided"</span>, paired = T)</span><br><span class="line"></span><br><span class="line">	Wilcoxon signed rank test</span><br><span class="line"></span><br><span class="line">data:  x <span class="keyword">and</span> y</span><br><span class="line">V = <span class="number">7</span>, p-value = <span class="number">0.5625</span></span><br><span class="line">alternative hypothesis: <span class="literal">true</span> location shift <span class="keyword">is</span> <span class="keyword">not</span> equal to <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><strong>step3:</strong><br>p-value = 0.5625&gt;0.05，说明TP53的表达量在胃癌患者的肿瘤与正常样本中不存在差异。</p>
+<h6 id="2-signed-test"><a href="#2-signed-test" class="headerlink" title="2. signed test"></a>2. signed test</h6><p>The sign test is a statistical test to compare the sizes of two groups. It is a non-parametric or “distribution free” test, which means the test doesn’t assume the data comes from a particular distribution, like the normal distribution. The sign test is an alternative to a one sample t test or a paired t test.</p>
+<p><strong>step2:</strong> 调用binom.tes()命令，作signed test</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&gt;</span> <span class="string">binom.test(sum(x&gt;y),length(x),alternative="two.sided")</span></span><br><span class="line"></span><br><span class="line">	<span class="string">Exact</span> <span class="string">binomial</span> <span class="string">test</span></span><br><span class="line"></span><br><span class="line"><span class="attr">data:</span>  <span class="string">sum(x</span> <span class="string">&gt;</span> <span class="string">y)</span> <span class="string">and</span> <span class="string">length(x)</span></span><br><span class="line"><span class="string">number</span> <span class="string">of</span> <span class="string">successes</span> <span class="string">=</span> <span class="number">2</span><span class="string">,</span> <span class="string">number</span> <span class="string">of</span> <span class="string">trials</span> <span class="string">=</span> <span class="number">6</span><span class="string">,</span> <span class="string">p-value</span> <span class="string">=</span> <span class="number">0.6875</span></span><br><span class="line"><span class="attr">alternative hypothesis:</span> <span class="literal">true</span> <span class="string">probability</span> <span class="string">of</span> <span class="string">success</span> <span class="string">is</span> <span class="string">not</span> <span class="string">equal</span> <span class="string">to</span> <span class="number">0.5</span></span><br><span class="line"><span class="attr">95 percent confidence interval:</span></span><br><span class="line"> <span class="number">0.04327187</span> <span class="number">0.77722190</span></span><br><span class="line"><span class="attr">sample estimates:</span></span><br><span class="line"><span class="string">probability</span> <span class="string">of</span> <span class="string">success</span> </span><br><span class="line">             <span class="number">0.3333333</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>step3:</strong><br>p-value = 0.6875，说明TP53的表达量在胃癌患者的肿瘤与正常样本中不存在差异。</p>
+<p>Q2<br>今测得某单位10名青年男性员工的体脂率和10名中年男性员工的体脂率，如表2，试用wilcoxon rank sum test分析中年男性员工的体脂率是否比青年男性员工的体脂率高？</p>
+<p>表2 两组员工的体脂率（%）</p>
+<table>
+<thead>
+<tr>
+<th align="center">青年男性</th>
+<th align="center">15</th>
+<th align="center">17</th>
+<th align="center">21</th>
+<th align="center">14</th>
+<th align="center">18</th>
+<th align="center">16</th>
+<th align="center">20</th>
+<th align="center">13</th>
+<th align="center">20</th>
+<th align="center">17</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">中年男性</td>
+<td align="center">20</td>
+<td align="center">16</td>
+<td align="center">19</td>
+<td align="center">18</td>
+<td align="center">17</td>
+<td align="center">22</td>
+<td align="center">21</td>
+<td align="center">18</td>
+<td align="center">19</td>
+<td align="center">16</td>
+</tr>
+</tbody></table>
+<p>解：根据题意作出以下假设：<br><strong>step1：</strong><br>H0：中年男性员工的体脂率与青年男性员工的体脂率不存在差异。<br>HA：中年男性员工的体脂率高于青年男性员工的体脂率。</p>
+<h6 id="1-wilcoxon-signed-ran"><a href="#1-wilcoxon-signed-ran" class="headerlink" title="1. wilcoxon signed-ran"></a>1. wilcoxon signed-ran</h6><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; j&lt;-c(<span class="number">15</span>,<span class="number">17</span>,<span class="number">21</span>,<span class="number">14</span>,<span class="number">18</span>,<span class="number">16</span>,<span class="number">20</span>,<span class="number">13</span>,<span class="number">20</span>,<span class="number">17</span>);s&lt;-c(<span class="number">20</span>,<span class="number">16</span>,<span class="number">19</span>,<span class="number">18</span>,<span class="number">17</span>,<span class="number">22</span>,<span class="number">21</span>,<span class="number">18</span>,<span class="number">19</span>,<span class="number">16</span>)</span><br><span class="line">&gt; wilcox.test(j,s,alternative = <span class="string">"less"</span>)</span><br><span class="line"></span><br><span class="line">	Wilcoxon rank sum test with continuity correction</span><br><span class="line"></span><br><span class="line">data:  j <span class="keyword">and</span> s</span><br><span class="line">W = <span class="number">33.5</span>, p-value = <span class="number">0.1117</span></span><br><span class="line">alternative hypothesis: <span class="literal">true</span> location shift <span class="keyword">is</span> less than <span class="number">0</span></span><br><span class="line"></span><br><span class="line">Warning message:</span><br><span class="line">In wilcox.test.<span class="keyword">default</span>(j, s, alternative = <span class="string">"less"</span>) :</span><br><span class="line">  cannot compute exact p-value with ties</span><br></pre></td></tr></table></figure>
+<p><strong>step3:</strong><br>p-value = 0.1117&gt;0.05，说明中年男性员工的体脂率与青年男性员工的体脂率不存在差异。</p>
+<p>Q3:<br>Alzheimer’s Disease (AD) is the most common cause of dementia, a group of brain disorders that results in the loss of intellectual and social skills. These changes are severe enough to interfere with day-to-day life. AD is characterized by the presence of senile plaques and neurofibrillary tangles in cortical regions of the brain. These pathological markers are thought to be responsible for the massive cortical neurodegeneration and concomitant loss of memory, reasoning, and after aberrant behaviors that are seen in patients with AD.<br>Here we have a gene expression data from normal neurons and neurons containing neurofibrillary tangles of 14 mid-stage AD cases. It can be found in “expression_data.txt”. Column 1-7 of “expression_data.txt” are normal neurons and column 8-14 are neurons with neurofibrillary tangles. Use the information mentioned above to answer the following questions:</p>
+<p>a)Use t-test to find significantly differential expression genes between normal and tangle neuron sample (p-value &lt; 0.01). Give the number of differential expressed genes and give the names of top 10 significantly differential expression genes.<br>Hint1: two types of t-test with equal variance and unequal variance are different.<br>Hint2: “names()” or “rownames()” can be used to extract names of differentially expressed genes.<br>Hint3: “apply(data,1,function(x){…})” can apply function to every row in data more quickly than “for{}”, so try to use “apply”.</p>
+<p>b)Adjust the p-values in question a) with both “bonferroni” and “fdr” method to find differentially expressed genes (adjusted p-value &lt; 0.01). Give the number of differential expressed genes.<br>Hint: you can do the adjustment according to the formula, or use “p.adjust()” instead</p>
+<p>注释：<br><a href="http://note.youdao.com/noteshare?id=21521795aff2483f9a0bce9e2aa02ae2" target="_blank" rel="noopener">本例题需要用到的数据从此下载</a></p>
+<h6 id="a"><a href="#a" class="headerlink" title="a)"></a>a)</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先设置工作路径</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">setwd("C:/Users/My/Desktop/")</span></span><br><span class="line"><span class="comment"># 读取数据</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">expression_data&lt;-read.table("expression_data.txt",header</span> <span class="string">=</span> <span class="string">T,</span> <span class="string">sep</span> <span class="string">=</span> <span class="string">""</span><span class="string">)</span></span><br><span class="line"><span class="comment"># 查看expression data 前6行的内容及格式</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">head(expression_data)</span></span><br><span class="line">         <span class="string">normal_1</span> <span class="string">normal_2</span> <span class="string">normal_3</span> <span class="string">normal_4</span> <span class="string">normal_5</span> <span class="string">normal_6</span>  <span class="string">normal_7</span></span><br><span class="line"><span class="string">A1BG</span>     <span class="number">6.917468</span> <span class="number">6.308350</span> <span class="number">5.318841</span> <span class="number">5.886811</span> <span class="number">5.082975</span> <span class="number">5.629453</span>  <span class="number">4.919035</span></span><br><span class="line"><span class="string">A1BG-AS1</span> <span class="number">7.862730</span> <span class="number">7.065809</span> <span class="number">6.783732</span> <span class="number">6.275773</span> <span class="number">3.063104</span> <span class="number">5.131017</span>  <span class="number">3.708938</span></span><br><span class="line"><span class="string">A1CF</span>     <span class="number">7.425996</span> <span class="number">7.707939</span> <span class="number">7.550885</span> <span class="number">5.708736</span> <span class="number">5.900326</span> <span class="number">6.888329</span>  <span class="number">5.987753</span></span><br><span class="line"><span class="string">A2M</span>      <span class="number">6.544029</span> <span class="number">8.364054</span> <span class="number">7.239746</span> <span class="number">9.037322</span> <span class="number">8.783692</span> <span class="number">8.863040</span> <span class="number">10.602350</span></span><br><span class="line"><span class="string">A2M-AS1</span>  <span class="number">4.986893</span> <span class="number">7.248867</span> <span class="number">7.098780</span> <span class="number">6.787237</span> <span class="number">6.252609</span> <span class="number">6.428099</span>  <span class="number">7.758556</span></span><br><span class="line"><span class="string">A2ML1</span>    <span class="number">7.205739</span> <span class="number">6.642142</span> <span class="number">6.320614</span> <span class="number">7.311845</span> <span class="number">5.133855</span> <span class="number">6.073740</span>  <span class="number">6.683212</span></span><br><span class="line">         <span class="string">tangle_1</span> <span class="string">tangle_2</span> <span class="string">tangle_3</span>  <span class="string">tangle_4</span> <span class="string">tangle_5</span> <span class="string">tangle_6</span> <span class="string">tangle_7</span></span><br><span class="line"><span class="string">A1BG</span>     <span class="number">3.585249</span> <span class="number">5.387387</span> <span class="number">7.238931</span>  <span class="number">6.806550</span> <span class="number">5.540485</span> <span class="number">5.371650</span> <span class="number">6.713791</span></span><br><span class="line"><span class="string">A1BG-AS1</span> <span class="number">7.184999</span> <span class="number">5.617467</span> <span class="number">6.097404</span>  <span class="number">7.146769</span> <span class="number">5.184743</span> <span class="number">4.538170</span> <span class="number">4.729529</span></span><br><span class="line"><span class="string">A1CF</span>     <span class="number">5.383705</span> <span class="number">7.921897</span> <span class="number">6.340110</span>  <span class="number">7.833862</span> <span class="number">6.250489</span> <span class="number">6.386345</span> <span class="number">7.602273</span></span><br><span class="line"><span class="string">A2M</span>      <span class="number">8.322173</span> <span class="number">8.372522</span> <span class="number">8.977941</span> <span class="number">10.238420</span> <span class="number">9.501352</span> <span class="number">9.413700</span> <span class="number">9.712794</span></span><br><span class="line"><span class="string">A2M-AS1</span>  <span class="number">6.974106</span> <span class="number">7.745843</span> <span class="number">7.434041</span>  <span class="number">7.455784</span> <span class="number">6.776254</span> <span class="number">6.949485</span> <span class="number">7.995484</span></span><br><span class="line"><span class="string">A2ML1</span>    <span class="number">7.004367</span> <span class="number">6.478264</span> <span class="number">6.273696</span>  <span class="number">6.413472</span> <span class="number">4.983931</span> <span class="number">5.629765</span> <span class="number">5.213316</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看数据格式</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">class(expression_data)</span></span><br><span class="line"><span class="string">[1]</span> <span class="string">"data.frame"</span> <span class="comment">#显示expression_data 为数据框</span></span><br><span class="line"><span class="comment"># 查看后6行的数据格式</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">tail(expression_data)</span></span><br><span class="line">       <span class="string">normal_1</span> <span class="string">normal_2</span> <span class="string">normal_3</span> <span class="string">normal_4</span> <span class="string">normal_5</span> <span class="string">normal_6</span> <span class="string">normal_7</span> <span class="string">tangle_1</span></span><br><span class="line"><span class="string">ZXDC</span>   <span class="number">6.640701</span> <span class="number">5.890944</span> <span class="number">5.938750</span> <span class="number">6.654318</span> <span class="number">6.736413</span> <span class="number">7.074550</span> <span class="number">7.471034</span> <span class="number">5.968300</span></span><br><span class="line"><span class="string">ZYG11A</span> <span class="number">5.743557</span> <span class="number">4.240352</span> <span class="number">3.554672</span> <span class="number">4.870805</span> <span class="number">1.078166</span> <span class="number">2.100594</span> <span class="number">1.994033</span> <span class="number">3.260842</span></span><br><span class="line"><span class="string">ZYG11B</span> <span class="number">8.155717</span> <span class="number">7.833657</span> <span class="number">7.735409</span> <span class="number">7.545919</span> <span class="number">9.281287</span> <span class="number">8.703769</span> <span class="number">9.068741</span> <span class="number">7.634121</span></span><br><span class="line"><span class="string">ZYX</span>    <span class="number">7.644676</span> <span class="number">7.219442</span> <span class="number">8.196732</span> <span class="number">8.111574</span> <span class="number">6.319132</span> <span class="number">7.059664</span> <span class="number">7.027851</span> <span class="number">8.310182</span></span><br><span class="line"><span class="string">ZZEF1</span>  <span class="number">6.333352</span> <span class="number">6.179294</span> <span class="number">8.038788</span> <span class="number">8.134454</span> <span class="number">5.207987</span> <span class="number">5.412623</span> <span class="number">5.279691</span> <span class="number">5.618791</span></span><br><span class="line"><span class="string">ZZZ3</span>   <span class="number">7.528695</span> <span class="number">7.970740</span> <span class="number">7.829330</span> <span class="number">7.998374</span> <span class="number">8.486491</span> <span class="number">8.432052</span> <span class="number">8.734170</span> <span class="number">8.111172</span></span><br><span class="line">       <span class="string">tangle_2</span> <span class="string">tangle_3</span> <span class="string">tangle_4</span> <span class="string">tangle_5</span> <span class="string">tangle_6</span> <span class="string">tangle_7</span></span><br><span class="line"><span class="string">ZXDC</span>   <span class="number">5.956762</span> <span class="number">6.761840</span> <span class="number">6.477379</span> <span class="number">6.634568</span> <span class="number">6.790257</span> <span class="number">7.145204</span></span><br><span class="line"><span class="string">ZYG11A</span> <span class="number">4.943476</span> <span class="number">2.984469</span> <span class="number">3.324508</span> <span class="number">1.310224</span> <span class="number">2.336032</span> <span class="number">2.811428</span></span><br><span class="line"><span class="string">ZYG11B</span> <span class="number">7.664895</span> <span class="number">8.532017</span> <span class="number">7.817962</span> <span class="number">9.153750</span> <span class="number">8.746823</span> <span class="number">6.946859</span></span><br><span class="line"><span class="string">ZYX</span>    <span class="number">6.880747</span> <span class="number">7.719131</span> <span class="number">7.439598</span> <span class="number">6.459248</span> <span class="number">6.677331</span> <span class="number">8.315430</span></span><br><span class="line"><span class="string">ZZEF1</span>  <span class="number">5.748279</span> <span class="number">4.855432</span> <span class="number">5.800385</span> <span class="number">5.424811</span> <span class="number">5.232450</span> <span class="number">5.403220</span></span><br><span class="line"><span class="string">ZZZ3</span>   <span class="number">7.877152</span> <span class="number">7.529809</span> <span class="number">7.612622</span> <span class="number">8.091155</span> <span class="number">7.937044</span> <span class="number">7.274963</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对数据按要求进行方差检验</span></span><br><span class="line"><span class="comment"># 通过apply() 函数进行数据批量处理，前7列和后7列数据一一进行计算方差</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">p.vartest</span> <span class="string">&lt;-</span> <span class="string">apply(expression_data,</span> <span class="number">1</span><span class="string">,</span> <span class="string">function(x)var.test(x[1:7],x[8:14])$p.value)</span></span><br><span class="line"><span class="comment"># 通过cbind()将两者组合在一起成为一个新的expression_data文件</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">expression_data</span> <span class="string">&lt;-</span> <span class="string">cbind(expression_data,p.vartest)</span></span><br><span class="line"><span class="comment"># 查看前6行</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">head(expression_data)</span></span><br><span class="line">         <span class="string">normal_1</span> <span class="string">normal_2</span> <span class="string">normal_3</span> <span class="string">normal_4</span> <span class="string">normal_5</span> <span class="string">normal_6</span>  <span class="string">normal_7</span> <span class="string">tangle_1</span> <span class="string">tangle_2</span> <span class="string">tangle_3</span>  <span class="string">tangle_4</span> <span class="string">tangle_5</span> <span class="string">tangle_6</span> <span class="string">tangle_7</span> <span class="string">p.vartest</span></span><br><span class="line"><span class="string">A1BG</span>     <span class="number">6.917468</span> <span class="number">6.308350</span> <span class="number">5.318841</span> <span class="number">5.886811</span> <span class="number">5.082975</span> <span class="number">5.629453</span>  <span class="number">4.919035</span> <span class="number">3.585249</span> <span class="number">5.387387</span> <span class="number">7.238931</span>  <span class="number">6.806550</span> <span class="number">5.540485</span> <span class="number">5.371650</span> <span class="number">6.713791</span> <span class="number">0.1997210</span></span><br><span class="line"><span class="string">A1BG-AS1</span> <span class="number">7.862730</span> <span class="number">7.065809</span> <span class="number">6.783732</span> <span class="number">6.275773</span> <span class="number">3.063104</span> <span class="number">5.131017</span>  <span class="number">3.708938</span> <span class="number">7.184999</span> <span class="number">5.617467</span> <span class="number">6.097404</span>  <span class="number">7.146769</span> <span class="number">5.184743</span> <span class="number">4.538170</span> <span class="number">4.729529</span> <span class="number">0.2408243</span></span><br><span class="line"><span class="string">A1CF</span>     <span class="number">7.425996</span> <span class="number">7.707939</span> <span class="number">7.550885</span> <span class="number">5.708736</span> <span class="number">5.900326</span> <span class="number">6.888329</span>  <span class="number">5.987753</span> <span class="number">5.383705</span> <span class="number">7.921897</span> <span class="number">6.340110</span>  <span class="number">7.833862</span> <span class="number">6.250489</span> <span class="number">6.386345</span> <span class="number">7.602273</span> <span class="number">0.7720165</span></span><br><span class="line"><span class="string">A2M</span>      <span class="number">6.544029</span> <span class="number">8.364054</span> <span class="number">7.239746</span> <span class="number">9.037322</span> <span class="number">8.783692</span> <span class="number">8.863040</span> <span class="number">10.602350</span> <span class="number">8.322173</span> <span class="number">8.372522</span> <span class="number">8.977941</span> <span class="number">10.238420</span> <span class="number">9.501352</span> <span class="number">9.413700</span> <span class="number">9.712794</span> <span class="number">0.1550970</span></span><br><span class="line"><span class="string">A2M-AS1</span>  <span class="number">4.986893</span> <span class="number">7.248867</span> <span class="number">7.098780</span> <span class="number">6.787237</span> <span class="number">6.252609</span> <span class="number">6.428099</span>  <span class="number">7.758556</span> <span class="number">6.974106</span> <span class="number">7.745843</span> <span class="number">7.434041</span>  <span class="number">7.455784</span> <span class="number">6.776254</span> <span class="number">6.949485</span> <span class="number">7.995484</span> <span class="number">0.1210762</span></span><br><span class="line"><span class="string">A2ML1</span>    <span class="number">7.205739</span> <span class="number">6.642142</span> <span class="number">6.320614</span> <span class="number">7.311845</span> <span class="number">5.133855</span> <span class="number">6.073740</span>  <span class="number">6.683212</span> <span class="number">7.004367</span> <span class="number">6.478264</span> <span class="number">6.273696</span>  <span class="number">6.413472</span> <span class="number">4.983931</span> <span class="number">5.629765</span> <span class="number">5.213316</span> <span class="number">0.9951156</span></span><br><span class="line"><span class="comment"># 通过apply() 函数批量将符合方差相等的数据进行成组t检验</span></span><br><span class="line"><span class="comment"># 得到p-value</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">p.value</span> <span class="string">&lt;-apply(expression_data,</span> <span class="number">1</span><span class="string">,</span> <span class="string">function(x)&#123;</span></span><br><span class="line"><span class="string">+</span>     <span class="string">if(x[15]&gt;0.05)&#123;</span></span><br><span class="line"><span class="string">+</span>         <span class="string">t.test(x[1:7],x[8:14],var.equal</span> <span class="string">=</span> <span class="string">T)$p.value&#125;</span> <span class="comment">#方差相等的t-test</span></span><br><span class="line"><span class="string">+</span>     <span class="string">else&#123;t.test(x[1:7],x[8:14],var.equal</span> <span class="string">=</span> <span class="string">F)$p.value&#125;#方差不等的t-test</span></span><br><span class="line"><span class="string">+</span> <span class="string">&#125;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 提取出前10个差异表达最大的基因的名称</span></span><br><span class="line"><span class="string">&gt;</span> <span class="string">names(p.value[order(p.value,decreasing</span> <span class="string">=</span> <span class="string">F)[1:10]])</span></span><br><span class="line"> <span class="string">[1]</span> <span class="string">"TECPR2"</span>       <span class="string">"ZMAT2"</span>        <span class="string">"NT5DC3"</span>       <span class="string">"SIN3A"</span>        <span class="string">"HYOU1"</span>        <span class="string">"UBE2Z"</span>       </span><br><span class="line"> <span class="string">[7]</span> <span class="string">"SDR39U1"</span>      <span class="string">"GNL2"</span>         <span class="string">"VIPAS39"</span>      <span class="string">"LOC100505584"</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="b"><a href="#b" class="headerlink" title="b)"></a>b)</h6><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; adjust1 &lt;- p.adjust(p.value, <span class="function"><span class="keyword">method</span> = "<span class="title">bonferroni</span>")</span></span><br><span class="line"><span class="function">&gt; <span class="title">sum</span><span class="params">(adjust1&lt;=0.01)</span></span></span><br><span class="line"><span class="function">[1] 364</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">&gt; <span class="title">adjust2</span> &lt;- <span class="title">p</span>.<span class="title">adjust</span><span class="params">(p.value,<span class="keyword">method</span> = "fdr")</span></span></span><br><span class="line"><span class="function">&gt; <span class="title">sum</span><span class="params">(adjust2&lt;=0.01)</span></span></span><br><span class="line"><span class="function">[1] 1049</span></span><br></pre></td></tr></table></figure>
+<p>所以用FDR和Bonferroni校正p值分别有1049个和364个基因差异表达</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/R/" rel="tag"># R</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/27/%E3%80%90R-%E7%BB%83%E4%B9%A0%E3%80%91%E7%94%9F%E7%89%A9%E7%BB%9F%E8%AE%A1%E5%AD%A6%E7%BB%83%E4%B9%A01/" rel="next" title="【R<-练习】生物统计学练习1">
+                <i class="fa fa-chevron-left"></i> 【R<-练习】生物统计学练习1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head_logo.jpg"
+                alt="WENJU QIAN" />
+            
+              <p class="site-author-name" itemprop="name">WENJU QIAN</p>
+              <p class="site-description motion-element" itemprop="description">UCAS小硕一枚,21世纪生物搬砖工</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/qianwenju" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:qianwenju2018@sibs.ac.cn" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-wilcoxon-signed-rank-test"><span class="nav-number">1.</span> <span class="nav-text">1. wilcoxon signed-rank test</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-signed-test"><span class="nav-number">2.</span> <span class="nav-text">2. signed test</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-wilcoxon-signed-ran"><span class="nav-number">3.</span> <span class="nav-text">1. wilcoxon signed-ran</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#a"><span class="nav-number">4.</span> <span class="nav-text">a)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#b"><span class="nav-number">5.</span> <span class="nav-text">b)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WENJU QIAN</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">13k</span>
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+# 添加访客数
+<div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+# 统计博客总计运行时间
+<span id="sitetime"></span>
+<script language=javascript>
+  function siteTime(){
+    window.setTimeout("siteTime()", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+    var today = new Date();
+    var todayYear = today.getFullYear();
+    var todayMonth = today.getMonth()+1;
+    var todayDate = today.getDate();
+    var todayHour = today.getHours();
+    var todayMinute = today.getMinutes();
+    var todaySecond = today.getSeconds();
+    /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+    year - 作为date对象的年份，为4位年份值
+    month - 0-11之间的整数，做为date对象的月份
+    day - 1-31之间的整数，做为date对象的天数
+    hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+    minutes - 0-59之间的整数，做为date对象的分钟数
+    seconds - 0-59之间的整数，做为date对象的秒数
+    microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+    var t1 = Date.UTC(2020,03,15,00,00,00); //这里调整博客建站时间，时间：2020-03-15 00:00:00
+    var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+    var diff = t2-t1;
+    var diffYears = Math.floor(diff/years);
+    var diffDays = Math.floor((diff/days)-diffYears*365);
+    var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+    var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+    var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+    document.getElementById("sitetime").innerHTML=" 已运行"/*+diffYears+" 年 "*/+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+  }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+  siteTime();
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: true,
+        notify: true,
+        appId: '0uYeC1X5ME3X6vtooIJoYito-gzGzoHsz',
+        appKey: '7u586HL29S9uVvurXaAzOhfn',
+        placeholder: '有想说的欢迎留言交流，留下你的邮箱，我会尽快回复~（邮箱不会被公开）',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":140,"height":260},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
